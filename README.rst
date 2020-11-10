@@ -19,7 +19,7 @@ An automation tool for taining and inference of 3D U-Net.
 Description
 -----------
 
-``mriunet_ser`` (ser for serial) is a ChRIS-based application that trains and inferences multiple subjects using 3D U-Net (`pl-mricnn <https://github.com/FNNDSC/pl-mricnn>`_) in a sequential order. It is designed for docking the output of `pl-mgz2labels <https://github.com/TingyiZhang/pl-mgz2labels>` and saving the tedious, repetitive process of training and inference using brain MRI label-wise data.
+``mriunet_ser`` (ser for serial) is a ChRIS-based application that trains and inferences multiple subjects using 3D U-Net (`pl-mricnn <https://github.com/FNNDSC/pl-mricnn>`_) in a sequential order. It is designed for docking the output of `pl-mgz2labels <https://github.com/TingyiZhang/pl-mgz2labels>`_ and saving the tedious, repetitive process of training and inference using brain MRI label-wise data.
 
 
 Usage
