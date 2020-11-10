@@ -13,13 +13,13 @@ pl-mriunet_ser
 Abstract
 --------
 
-An app to ...
+An automation tool for taining and inference of 3D U-Net.
 
 
 Description
 -----------
 
-``mriunet_ser`` is a ChRIS-based application that...
+``mriunet_ser`` (ser for serial) is a ChRIS-based application that trains and inferences multiple subjects using 3D U-Net (`pl-mricnn <https://github.com/FNNDSC/pl-mricnn>`_) in a sequential order. It is designed for docking the output of `pl-mgz2labels <https://github.com/TingyiZhang/pl-mgz2labels>` and saving the tedious, repetitive process of training and inference using brain MRI label-wise data.
 
 
 Usage
@@ -28,11 +28,9 @@ Usage
 .. code::
 
     python mriunet_ser.py
-        [-h|--help]
-        [--json] [--man] [--meta]
-        [--savejson <DIR>]
-        [-v|--verbosity <level>]
         [--version]
+        [--mode]
+        [--epochs]
         <inputDir> <outputDir>
 
 
@@ -40,63 +38,110 @@ Arguments
 ~~~~~~~~~
 
 .. code::
-
-    [-h] [--help]
-    If specified, show help message and exit.
-    
-    [--json]
-    If specified, show json representation of app and exit.
     
     [--man]
     If specified, print (this) man page and exit.
-
-    [--meta]
-    If specified, print plugin meta data and exit.
-    
-    [--savejson <DIR>] 
-    If specified, save json representation file to DIR and exit. 
-    
-    [-v <level>] [--verbosity <level>]
-    Verbosity level for app. Not used currently.
     
     [--version]
-    If specified, print version number and exit. 
+    If specified, print version number and exit.
 
+    [--mode]
+    (Required) 1: Training, 2: Prediction
+    
+    [--epochs]
+    (Optional) Default epoch number is 5
 
-Getting inline help is:
-
-.. code:: bash
-
-    docker run --rm fnndsc/pl-mriunet_ser mriunet_ser --man
 
 Run
-~~~
+---
 
-You need you need to specify input and output directories using the `-v` flag to `docker run`.
-
+Using Python3
+~~~~~~~~~~
+Mode 1 (training):
 
 .. code:: bash
 
-    docker run --rm -u $(id -u)                             \
-        -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
-        fnndsc/pl-mriunet_ser mriunet_ser                        \
+    Python3 pl-mriunet_ser/mriunet_ser.py --mode 1 --epochs <epoch number> <input dir> <output dir>
+
+Mode 2 (predict):
+
+.. code:: bash
+
+    Python3 pl-mriunet_ser/mriunet_ser.py --mode 2 <input dir> <output dir>
+
+
+Using ``docker run``
+~~~~~~~~~~~~~~~~~~~
+First, you need to build a docker image.
+
+.. code:: bash
+
+    docker build -t mriunet_ser .
+
+Mode 1 (training):
+
+.. code:: bash
+
+    docker run --rm                             \
+        -v $(pwd)/<input dir>:/incoming -v $(pwd)/<output dir>:/outgoing      \
+        mriunet_ser mriunet_ser                        \
+        --mode 1                        \
+        --epochs <epoch number>                        \
         /incoming /outgoing
 
+Mode 2 (predict):
+
+.. code:: bash
+
+    docker run --rm                            \
+        -v $(pwd)/<input dir>:/incoming -v $(pwd)/<output dir>:/outgoing      \
+        mriunet_ser mriunet_ser                        \
+        --mode 2                        \
+        /incoming /outgoing
 
 Development
 -----------
 
-Build the Docker container:
+You can fork or clone this repo and change the code in mriunet_ser.py. Then build a local Docker image using:
 
 .. code:: bash
 
     docker build -t local/pl-mriunet_ser .
 
+Or push to your Docker Hub.
+
 Examples
 --------
+``docker run`` is recommended.
 
-Put some examples here!
+.. code:: bash
+
+    docker build -t mriunet_ser .
+
+Mode 1 (training):
+
+.. code:: bash
+
+    docker run --rm                             \
+        -v $(pwd)/<input dir>:/incoming -v $(pwd)/<output dir>:/outgoing      \
+        mriunet_ser mriunet_ser                        \
+        --mode 1                        \
+        --epochs <epoch number>                        \
+        /incoming /outgoing
+
+Mode 2 (predict):
+
+.. code:: bash
+
+    docker run --rm                             \
+        -v $(pwd)/<input dir>:/incoming -v $(pwd)/<output dir>:/outgoing      \
+        mriunet_ser mriunet_ser                        \
+        --mode 2                        \
+        /incoming /outgoing
 
 
-.. image:: https://raw.githubusercontent.com/FNNDSC/cookiecutter-chrisapp/master/doc/assets/badge/light.png
-    :target: https://chrisstore.co
+Trouble shooting
+----------------
+1. Make sure that the *output directory* is world writable. You can do it by ```chmod 777 <output dir>```.
+
+2. Try to remove the ``.DS_store`` file in the input directory.

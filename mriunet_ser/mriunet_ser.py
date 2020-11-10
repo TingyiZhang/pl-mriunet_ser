@@ -10,7 +10,6 @@
 #                        dev@babyMRI.org
 #
 
-
 from __future__ import print_function
 
 import os
@@ -21,7 +20,6 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from skimage.io import imsave
 import numpy as np
-import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, concatenate, Conv3D, MaxPooling3D, Conv3DTranspose
 from tensorflow.keras.optimizers import Adam

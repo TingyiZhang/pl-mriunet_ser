@@ -3,11 +3,8 @@ from __future__ import print_function
 import os
 import glob
 import numpy as np
-from skimage.transform import resize
-from skimage.io import imsave
 
 from skimage.io import imread
-from numba import cuda, jit
 
 data_path = 'in'
 
